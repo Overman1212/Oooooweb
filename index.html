@@ -11,6 +11,12 @@
             background-color: #14BDE6;
             color: white;
             text-align: center;
+
+            /* Disable text selection */
+            -webkit-user-select: none; /* Chrome, Safari, Opera */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
         }
         h1 {
             font-size: 3em;
@@ -90,6 +96,27 @@
     </div>
 
     <script>
+        // Disable right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable certain keyboard shortcuts (Ctrl+C, Ctrl+V, Ctrl+U, Ctrl+S)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey && e.key === 'c') || (e.ctrlKey && e.key === 'v') || 
+                (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) {
+                e.preventDefault();
+            }
+        });
+
+        // Prevent PrintScreen key for basic screenshot blocking
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'PrintScreen') {
+                alert('Screenshots are not allowed!');
+            }
+        });
+
+        // Handle the form submission and price calculation
         document.getElementById('cryptoForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const cryptoAmount = parseFloat(document.getElementById('cryptoAmount').value);
@@ -102,7 +129,6 @@
             fetch('https://api.binance.com/api/v3/ticker/price?symbol=DOGSUSDT')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     const dogsToUsdtRate = parseFloat(data.price);
                     const usdtToBirrRate = 110; // 1 USDT = 110 Birr
 
